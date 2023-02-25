@@ -1,18 +1,20 @@
 from fastapi import FastAPI, File, UploadFile
 import uvicorn
-import numpy as np
 from io import BytesIO
-from PIL import Image
+import random
 import tensorflow as tf
+import numpy as np
+from PIL import Image
 
 app = FastAPI()
 
 MODEL = tf.keras.models.load_model("../saved_models/2")
 CLASS_NAMES = ["Bacterial_Spot","Leaf_Mold", "Healthy"]
 
-@app.get("/ping")
+@app.get("/")
 async def ping():
-    return "Hello uhmm ??"
+    return {'disease':random.choice(CLASS_NAMES),
+    'model_version':random.randint(0,9)}
 
 def read_file_as_image(data) -> np.ndarray:
     image = np.array(Image.open(BytesIO(data)))
